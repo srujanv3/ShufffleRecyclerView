@@ -1,5 +1,6 @@
 package com.blogspot.svdevs.shuffflerv
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity() {
             setHasFixedSize(true)
             UIlist.shuffle()
             adapter = RVAdapter(UIlist)
+        }
+
+        binding.fab.setOnClickListener {
+            startActivity(Intent(this, SecondActivity::class.java))
         }
     }
 }
