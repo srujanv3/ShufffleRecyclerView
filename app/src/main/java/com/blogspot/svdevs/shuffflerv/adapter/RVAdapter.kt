@@ -10,75 +10,51 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blogspot.svdevs.shuffflerv.R
 import com.blogspot.svdevs.shuffflerv.data.Uidata
 import com.blogspot.svdevs.shuffflerv.data.ViewData
+import com.blogspot.svdevs.shuffflerv.databinding.ButtonLayoutBinding
+import com.blogspot.svdevs.shuffflerv.databinding.EditTextLayoutBinding
 import com.blogspot.svdevs.shuffflerv.databinding.ItemLayoutBinding
+import com.blogspot.svdevs.shuffflerv.databinding.TitleLayoutBinding
+import java.lang.IllegalArgumentException
 
 class RVAdapter(
-//    private var dataList: ArrayList<ViewData>,
     private var dataList: ArrayList<Uidata>,
-) : RecyclerView.Adapter<RVAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = ItemLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding)
+) : RecyclerView.Adapter<LoginViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LoginViewHolder {
+        return when(viewType) {
+            R.layout.title_layout -> LoginViewHolder.TitleViewHolder(
+                TitleLayoutBinding.inflate(
+                LayoutInflater.from(parent.context),parent,false))
+            R.layout.edit_text_layout -> LoginViewHolder.EditTextViewHolder(
+                EditTextLayoutBinding.inflate(
+                    LayoutInflater.from(parent.context),parent,false))
+            R.layout.button_layout -> LoginViewHolder.ButtonViewHolder(
+                ButtonLayoutBinding.inflate(
+                    LayoutInflater.from(parent.context),parent,false))
+
+            else -> throw IllegalArgumentException("Invalid ViewType Provided")
+        }
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LoginViewHolder, position: Int) {
         val currentItem = dataList[position]
         val context = holder.itemView.context
-        holder.bind(currentItem, context)
+        when(holder) {
+            is LoginViewHolder.TitleViewHolder -> holder.bind(currentItem,context)
+            is LoginViewHolder.EditTextViewHolder -> holder.bind(currentItem,context)
+            is LoginViewHolder.ButtonViewHolder -> holder.bind(currentItem,context)
+        }
     }
 
     override fun getItemCount(): Int {
         return dataList.size
     }
 
-    class ViewHolder(private val binding: ItemLayoutBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        fun bind(data: Uidata, context: Context) {
-
-//            val dataValue = data.uidata[position]
-
-            if (data.uitype.equals("label")) {
-                binding.titleTextLayout.visibility = View.VISIBLE
-                binding.tvTitle.text = data.value
-                binding.etLayout.visibility = View.GONE
-                binding.btnLayout.visibility = View.GONE
-
-            } else if (data.uitype.equals("edittext")) {
-                binding.etLayout.visibility = View.VISIBLE
-                binding.labelInput.hint = data.hint
-                binding.titleTextLayout.visibility = View.GONE
-                binding.btnLayout.visibility = View.GONE
-
-                // for setting up inputType and drawable icons wrt key_type
-                when(data.key) {
-                    "text_name" -> {
-                        binding.apply {
-                            labelInput.startIconDrawable = ContextCompat.getDrawable(context,R.drawable.user)
-                            titleInputValue.inputType = InputType.TYPE_CLASS_TEXT
-                        }
-                    }
-                    "text_phone" -> {
-                        binding.apply {
-                            labelInput.startIconDrawable = ContextCompat.getDrawable(context,R.drawable.phone)
-                            titleInputValue.inputType = InputType.TYPE_CLASS_NUMBER
-                        }
-                    }
-                    "text_city" -> {
-                        binding.apply {
-                            labelInput.startIconDrawable = ContextCompat.getDrawable(context,R.drawable.city)
-                            titleInputValue.inputType = InputType.TYPE_CLASS_TEXT
-                        }
-                    }
-                }
-
-            } else if (data.uitype.equals("button")) {
-                binding.btnLayout.visibility = View.VISIBLE
-                binding.btnLayout.text = data.value
-                binding.etLayout.visibility = View.GONE
-                binding.titleTextLayout.visibility = View.GONE
-            }
-
+    override fun getItemViewType(position: Int): Int {
+        return when(dataList[position].uitype){
+             "label" -> R.layout.title_layout
+             "edittext" -> R.layout.edit_text_layout
+             "button" -> R.layout.button_layout
+            else -> {throw IllegalStateException("No view found")}
         }
 
     }
