@@ -3,6 +3,7 @@ package com.blogspot.svdevs.shuffflerv
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.blogspot.svdevs.shuffflerv.adapter.RVAdapter
 import com.blogspot.svdevs.shuffflerv.data.Uidata
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        window.statusBarColor = ContextCompat.getColor(applicationContext, R.color.blue002)
 
         UIlist = arrayListOf()
 
@@ -36,12 +38,12 @@ class MainActivity : AppCompatActivity() {
         binding.rvLayout.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             setHasFixedSize(true)
-            UIlist.shuffle()
+//            UIlist.shuffle()
             adapter = RVAdapter(UIlist)
         }
 
-        binding.fab.setOnClickListener {
-            startActivity(Intent(this, SecondActivity::class.java))
-        }
+//        binding.fab.setOnClickListener {
+//            startActivity(Intent(this, SecondActivity::class.java))
+//        }
     }
 }
